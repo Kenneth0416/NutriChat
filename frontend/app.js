@@ -1,6 +1,12 @@
 "use strict";
 
-const API_BASE = window.NUTRICHAT_API_BASE || "http://localhost:3000/api";
+const ORIGIN =
+  typeof window !== "undefined" && window.location
+    ? window.location.origin.replace(/\/$/, "")
+    : "";
+const API_BASE =
+  window.NUTRICHAT_API_BASE ||
+  (ORIGIN ? `${ORIGIN}/api` : "http://localhost:3000/api");
 const DEFAULT_LOADING_TEXT = "正在處理，請稍候…";
 const HISTORY_LIMIT =
   Number.parseInt(window.NUTRICHAT_HISTORY_LIMIT || "20", 10) || 20;
