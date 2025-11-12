@@ -1,0 +1,230 @@
+<!doctype html>
+<html lang="zh-Hant">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>NutriChat 食譜助手</title>
+    <meta
+      name="description"
+      content="根據你的目標與偏好，智慧生成健康食譜與嬰幼兒輔食方案"
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <header class="app-header">
+      <div class="brand">
+        <div class="logo">🥗</div>
+        <div class="title">NutriChat 食譜助手</div>
+      </div>
+      <div class="tagline">清新健康 · 個人化食譜 · 嬰幼兒輔食</div>
+    </header>
+
+    <main class="layout">
+      <section class="intro-column">
+        <div class="panel hero">
+          <h1>打造你的專屬健康餐單</h1>
+          <p class="hero-lede">
+            根據你的健康目標，NutriChat 即時調整營養比例與菜單，協助你做出更好的日常選擇。
+          </p>
+          <div class="hero-highlights">
+            <div class="hero-highlight">
+              <span class="highlight-icon">🥗</span>
+              <div class="highlight-text">
+                <strong>智慧規劃</strong>
+                <span>依照熱量、食材與作息自動搭配。</span>
+              </div>
+            </div>
+            <div class="hero-highlight">
+              <span class="highlight-icon">🍼</span>
+              <div class="highlight-text">
+                <strong>全齡照護</strong>
+                <span>涵蓋成人營養與嬰幼兒輔食。</span>
+              </div>
+            </div>
+            <div class="hero-highlight">
+              <span class="highlight-icon">📋</span>
+              <div class="highlight-text">
+                <strong>即時調整</strong>
+                <span>快速更新偏好與限制，立即同步菜單。</span>
+              </div>
+            </div>
+          </div>
+          <div class="quick-actions">
+            <span class="qa-label">快速設定目標</span>
+            <button class="chip" data-goal="loss">減脂/低卡</button>
+            <button class="chip" data-goal="muscle">增肌/高蛋白</button>
+            <button class="chip" data-goal="balanced">均衡營養</button>
+            <button class="chip" data-goal="vegan">素食/植物基</button>
+            <button class="chip" data-goal="baby">嬰幼兒輔食</button>
+          </div>
+        </div>
+      </section>
+
+      <section class="chat-column">
+        <div class="chat">
+          <div class="chat-header">
+            <div>
+              <h2>開始對話</h2>
+              <p>輸入飲食與生活型態需求，NutriChat 將提供專屬的營養建議與餐單。</p>
+            </div>
+            <div class="chat-meta">
+              <span class="chat-meta-badge">即時回應</span>
+            </div>
+          </div>
+
+        <div id="messages" class="messages" aria-live="polite"></div>
+        <div
+          id="loading-overlay"
+          class="loading-overlay"
+          role="status"
+          aria-hidden="true"
+        >
+          <div class="spinner" aria-hidden="true"></div>
+          <div id="loading-text">正在處理，請稍候…</div>
+        </div>
+
+          <div class="composer">
+            <input
+              id="input"
+              type="text"
+              placeholder="告訴我你的目標與偏好，例如：我想減脂，不能吃堅果，偏愛地中海風味"
+            />
+            <div class="composer-actions">
+              <button id="gen-day" class="btn primary">生成一日食譜</button>
+              <button id="gen-week" class="btn">生成一周食譜</button>
+              <button id="gen-list" class="btn">購物清單</button>
+              <button id="send" class="btn accent">發送</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <aside class="info-column">
+        <div class="panel">
+          <h3>健康提示</h3>
+          <ul class="tips-list">
+            <li>減脂優先選擇高纖維、低糖、優質蛋白。</li>
+            <li>增肌建議每餐確保足量蛋白與複合碳水。</li>
+            <li>嬰幼兒輔食遵循月齡與質地階段，避免鹽與蜂蜜。</li>
+            <li>如有過敏史，請在聊天中直接說明，例如「對蛋過敏」。</li>
+          </ul>
+        </div>
+
+        <div class="panel subtle">
+          <h3>偏好與限制</h3>
+          <div id="prefs" class="prefs"></div>
+          <form class="info-form" id="profile-form" autocomplete="off">
+            <div class="section">
+              <h4>健康目標</h4>
+              <p class="section-hint">
+                選擇你的主要目標，並補充希望達成的時間或體態描述，協助我們生成更合適的餐單。
+              </p>
+              <div class="row">
+                <div class="field">
+                  <label for="input-goal">目標</label>
+                  <select id="input-goal">
+                    <option value="">-- 選擇你的主要目標 --</option>
+                    <option value="loss">減脂 / 控糖</option>
+                    <option value="muscle">增肌 / 高蛋白</option>
+                    <option value="balanced">均衡營養</option>
+                    <option value="vegan">素食 / 植物基</option>
+                    <option value="baby">嬰幼兒輔食</option>
+                  </select>
+                </div>
+                <div class="field">
+                  <label for="input-goal-notes">目標補充</label>
+                  <textarea
+                    id="input-goal-notes"
+                    rows="3"
+                    placeholder="例：希望 3 個月內減脂 5 公斤，提升肌力訓練恢復"
+                  ></textarea>
+                </div>
+              </div>
+            </div>
+            <div class="section">
+              <h4>基本資料</h4>
+              <p class="section-hint">填寫你的基本體態資訊，估算熱量與營養素比例更準確。</p>
+              <div class="row">
+                <div class="field">
+                  <label for="input-age">年齡</label>
+                  <input
+                    type="number"
+                    id="input-age"
+                    min="0"
+                    max="120"
+                    placeholder="例如 30"
+                  />
+                </div>
+                <div class="field">
+                  <label for="input-height">身高 (cm)</label>
+                  <input
+                    type="number"
+                    id="input-height"
+                    min="0"
+                    max="230"
+                    placeholder="例如 168"
+                  />
+                </div>
+                <div class="field">
+                  <label for="input-weight">體重 (kg)</label>
+                  <input
+                    type="number"
+                    id="input-weight"
+                    min="0"
+                    max="250"
+                    placeholder="例如 60"
+                  />
+                </div>
+                <div class="field">
+                  <label for="input-baby-months">寶寶月齡</label>
+                  <input
+                    type="number"
+                    id="input-baby-months"
+                    min="0"
+                    max="48"
+                    placeholder="例如 9"
+                  />
+                </div>
+              </div>
+            </div>
+            <div class="section">
+              <h4>飲食限制與偏好</h4>
+              <p class="section-hint">
+                告訴我們需要避開的過敏食材與忌口，並可補充偏好菜系或口味。
+              </p>
+              <div class="field">
+                <label for="input-allergies">過敏源 (以逗號分隔)</label>
+                <input
+                  type="text"
+                  id="input-allergies"
+                  placeholder="例如：堅果, 海鮮, 乳製品"
+                />
+              </div>
+              <div class="field">
+                <label for="input-avoid">忌口 / 特殊偏好</label>
+                <textarea
+                  id="input-avoid"
+                  rows="2"
+                  placeholder="例如：不吃辣、避免油炸、低鈉、偏好地中海風味"
+                ></textarea>
+              </div>
+            </div>
+          </form>
+        </div>
+      </aside>
+    </main>
+
+    <footer class="footer">
+      <div>© NutriChat · 僅供飲食參考，特殊族群請遵循醫囑</div>
+    </footer>
+
+    <script src="./app.js"></script>
+  </body>
+</html>
+
